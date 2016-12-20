@@ -1,0 +1,29 @@
+{
+  "name": "note-down",
+  "version": "0.0.0",
+  "description": "A logging helper for Node JS Edit",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: No test specified\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webextensions/note-down.git"
+  },
+  "keywords": [
+    "console",
+    "log",
+    "logging",
+    "library",
+    "file"
+  ],
+  "author": "Priyank Parashar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/webextensions/note-down/issues"
+  },
+  "homepage": "https://github.com/webextensions/note-down#readme",
+  "dependencies": {
+    "chalk": "^1.1.3"
+  }
+}
