@@ -10,8 +10,23 @@ var prettyJSON = function (obj) {
 
 var disableLogging = false;
 
+var getLine = function () {
+    var errStr = '';
+    try {
+        throw new Error('dummy error');
+    } catch (e) {
+        errStr = e.stack.toString();
+        errStr = errStr.split('note-down')[3];
+        errStr = errStr.substr(errStr.indexOf('(') + 1);
+        errStr = errStr.substr(0, errStr.indexOf(')'));
+    }
+    return errStr;
+};
+
 var log = function (msg) {
-    if (disableLogging) {
+    if (global.debugLogs) {
+        console.log(msg + ' @ ' + chalk.gray.dim(getLine()));
+    } else if (disableLogging) {
         // do nothing
     } else {
         console.log(msg);
