@@ -1,6 +1,6 @@
 {
   "name": "note-down",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A logging helper for Node JS Edit",
   "main": "index.js",
   "scripts": {
