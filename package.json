@@ -4,7 +4,7 @@
   "description": "A logging helper for Node JS Edit",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: No test specified\""
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
