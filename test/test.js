@@ -2,8 +2,10 @@
 
 var assert = require('assert');
 
+var sinon = require('sinon'),
+    chalk = require('chalk');
+
 var noteDown = require('../index.js');      // eslint-disable-line no-unused-vars
-var sinon = require('sinon');
 
 var logger = noteDown;
 logger.option('basePath', __dirname);
@@ -91,8 +93,14 @@ describe('Application', function() {
                 // Note: This piece of code is sensitive to its placement (line number in code)
                 logger.log(str);
 
-                // Using ".deepEqual()" to print the complete error message
-                assert.deepEqual({value: spy.args[0][0]}, {value: str + '\u001b[90m\u001b[2m @ test.js:92:24\u001b[22m\u001b[39m'});
+                try {
+                    // Using ".deepEqual()" to print the complete error message
+                    // It seems to be not match correctly when executed using "np" (https://www.npmjs.com/package/np)
+                    assert.deepEqual({value: spy.args[0][0]}, {value: str + '\u001b[90m\u001b[2m @ test.js:94:24\u001b[22m\u001b[39m'});
+                } catch (e) {
+                    console.log(chalk.red('You should never see this message on screen under normal run (It is OK, if you see this message when running through a tool like npm global package "np").'));
+                    assert.deepEqual({value: spy.args[0][0]}, {value: str + ' @ test.js:94:24'});
+                }
             }, function () {
                 done();
             });
@@ -108,8 +116,14 @@ describe('Application', function() {
                 // Note: This piece of code is sensitive to its placement (line number in code)
                 logger.log(str);
 
-                // Using ".deepEqual()" to print the complete error message
-                assert.deepEqual({value: spy.args[0][0]}, {value: str + '\u001b[90m\u001b[2m @ ' + __filename + ':109:24\u001b[22m\u001b[39m'});
+                try {
+                    // Using ".deepEqual()" to print the complete error message
+                    // It seems to be not match correctly when executed using "np" (https://www.npmjs.com/package/np)
+                    assert.deepEqual({value: spy.args[0][0]}, {value: str + '\u001b[90m\u001b[2m @ ' + __filename + ':117:24\u001b[22m\u001b[39m'});
+                } catch (e) {
+                    console.log(chalk.red('You should never see this message on screen under normal run (It is OK, if you see this message when running through a tool like npm global package "np").'));
+                    assert.deepEqual({value: spy.args[0][0]}, {value: str + ' @ ' + __filename + ':117:24'});
+                }
             }, function () {
                 done();
             });
