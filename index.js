@@ -3,13 +3,10 @@
 
 var util = require('util'),
     Path = require('path');
+
 var chalk = require('chalk');
 
-var prettyJSON = function (obj) {
-    return JSON.stringify(obj, null, 4);
-};
-
-var disableLogging = false;
+var noteDown = {};
 
 var getLine = function () {
     var errStr = '';
@@ -17,7 +14,12 @@ var getLine = function () {
         throw new Error('dummy error');
     } catch (e) {
         errStr = e.stack.toString();
-        errStr = errStr.split('note-down')[3];
+
+        errStr = errStr.split('note-down');
+        errStr.shift();     // TODO: This can be optimized. Currently using ".shift()". When optimizing, ensure that this works correctly for test cases.
+        errStr.shift();
+        errStr.shift();
+        errStr = errStr.join('note-down');
 
         errStr = errStr.substr(errStr.indexOf('\n    at ') + 1);
         errStr = errStr.substr(0, errStr.indexOf('\n')).replace('    at ', '');
@@ -29,7 +31,8 @@ var getLine = function () {
     }
     var line = errStr;
 
-    if (global._noteDown_basePath) {
+
+    if (noteDown.getComputedOption('basePath')) {
         // TODO: Check if it works fine with Windows paths
 
         var filePathAndLine = errStr;
@@ -40,7 +43,7 @@ var getLine = function () {
             extractedPath = extractedPath.substr(0, extractedPath.lastIndexOf(':'));
         }
 
-        var relativePath = Path.relative(global._noteDown_basePath, extractedPath);
+        var relativePath = Path.relative(noteDown.getComputedOption('basePath'), extractedPath);
 
         line = relativePath + filePathAndLine.replace(extractedPath, '');
     }
@@ -48,12 +51,14 @@ var getLine = function () {
 };
 
 var log = function (msg) {
-    if (global._noteDown_showLogLine) {
-        console.log(msg + ' @ ' + chalk.gray.dim(getLine()));
-    } else if (disableLogging) {
-        // do nothing
+    if (noteDown.getComputedOption('disabled')) {
+        // do nothing (because logging is disabled)
     } else {
-        console.log(msg);
+        if (noteDown.getComputedOption('showLogLine')) {
+            console.log(msg + chalk.gray.dim(' @ ' + getLine()));
+        } else {
+            console.log(msg);
+        }
     }
 };
 
@@ -69,6 +74,7 @@ var fnMap = {
     error: chalk.red,
     errorHeading: chalk.white.bgRed,
     fatal: chalk.white.bgRed,
+    fixme: chalk.yellow,
     help: chalk.black.bgWhite,
     info: chalk.cyan,
     json: [chalk.magenta, function (msg) {
@@ -80,9 +86,8 @@ var fnMap = {
     }],
     log: null,
     success: chalk.green,
-    trace: chalk.yellow,
     todo: chalk.yellow,
-    fixme: chalk.yellow,
+    trace: chalk.yellow,
     verbose: [chalk.dim, function (msg) {
         if (typeof msg !== 'string') {
             msg = util.inspect(msg, {
@@ -96,7 +101,6 @@ var fnMap = {
     warnHeading: chalk.black.bgYellow
 };
 
-var noteDown = {};
 Object.keys(fnMap).forEach(function (key) {
     if (fnMap[key] === null) {
         noteDown[key] = function (msg) { log(msg); };
@@ -110,11 +114,47 @@ Object.keys(fnMap).forEach(function (key) {
     }
 });
 
-noteDown.off = noteDown.disable = function () {
-    disableLogging = true;
+var globalPrefix = '_noteDown_';
+
+// Get/Set an option
+noteDown.option = function (name, value, globalSetting) {
+    if (value === undefined) {
+        if (globalSetting) {
+            return global[globalPrefix + name];
+        } else {
+            return options[name];
+        }
+    } else {
+        if (globalSetting) {
+            global[globalPrefix + name] = value;
+        } else {
+            options[name] = value;
+        }
+        return noteDown;
+    }
 };
-noteDown.on = noteDown.enable = function () {
-    disableLogging = false;
+
+// Remove an option
+noteDown.removeOption = function (name, globalSetting) {
+    if (globalSetting) {
+        delete global[globalPrefix + name];
+    } else {
+        delete options[name];
+    }
 };
+
+// Get the computed value for the option (value set for the option and fallback to the global value)
+noteDown.getComputedOption = function (name) { return noteDown.option(name) || noteDown.option(name, undefined, true); };
+
+noteDown.off = noteDown.disable = function () { noteDown.option('disabled', true);  };
+noteDown.on  = noteDown.enable  = function () { noteDown.option('disabled', false); };
+
+// Options object
+var options = {
+    disabled: noteDown.option('disabled', undefined, true) || undefined,
+    basePath: noteDown.option('basePath', undefined, true) || undefined,
+    showLogLine: noteDown.option('showLogLine', undefined, true) || true
+};
+
 
 module.exports = noteDown;
