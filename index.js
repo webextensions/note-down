@@ -149,6 +149,8 @@ noteDown.getComputedOption = function (name) { return noteDown.option(name) || n
 noteDown.off = noteDown.disable = function () { noteDown.option('disabled', true);  };
 noteDown.on  = noteDown.enable  = function () { noteDown.option('disabled', false); };
 
+noteDown.chalk = chalk;
+
 // Options object
 var options = {
     disabled: noteDown.option('disabled', undefined, true) || undefined,

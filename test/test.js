@@ -129,6 +129,12 @@ describe('Application', function() {
             });
         });
 
+        it('should be able to export the chalk object', function (done) {
+            positionConsoleOutput(true);
+            logger.log(logger.chalk.red('Red') + ' - ' + logger.chalk.blue('Blue') + ' (colored via chalk)');
+            done();
+        });
+
         it('should be able to get and set an option value', function(done) {
             positionConsoleOutput(false);
             logger.option('showLogLine', true);
