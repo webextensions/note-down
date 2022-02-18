@@ -53,14 +53,25 @@ var getLine = function () {
     return line;
 };
 
+const deviceNameIfAvailableInGray = (function () {
+    // $ export NOTE_DOWN_DEVICE_NAME="example.com"
+    const deviceName = process.env.NOTE_DOWN_DEVICE_NAME;
+
+    if (deviceName) {
+        return chalk.gray.dim('[' + process.env.NOTE_DOWN_DEVICE_NAME + '] ');
+    } else {
+        return '';
+    }
+}());
+
 var log = function (msg) {
     if (noteDown.getComputedOption('disabled')) {
         // do nothing (because logging is disabled)
     } else {
         if (noteDown.getComputedOption('showLogLine')) {
-            console.log(msg + chalk.gray.dim(' @ ' + getLine()));
+            console.log(deviceNameIfAvailableInGray + msg + chalk.gray.dim(' @ ' + getLine()));
         } else {
-            console.log(msg);
+            console.log(deviceNameIfAvailableInGray + msg);
         }
     }
 };
