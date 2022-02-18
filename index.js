@@ -18,6 +18,13 @@ var getLine = function () {
         // TODO: This can be optimized. When optimizing, ensure that this works correctly for test cases.
         errStr = errStr.split('note-down/index.js').pop();
 
+        const ignoreLogsFor = noteDown.getComputedOption('ignoreLogsFor');
+        if (Array.isArray(ignoreLogsFor)) {
+            for (const entryToIgnore of ignoreLogsFor) {
+                errStr = errStr.split(entryToIgnore).pop();
+            }
+        }
+
         errStr = errStr.substr(errStr.indexOf('\n    at ') + 1);
         errStr = errStr.substr(0, errStr.indexOf('\n')).replace('    at ', '');
 
