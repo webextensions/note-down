@@ -243,8 +243,10 @@ const createNoteDownInstance = function () {
 };
 
 const noteDown = createNoteDownInstance();
+const logger = noteDown;
 
 module.exports = {
+    createNoteDownInstance,
     noteDown,
-    createNoteDownInstance
+    logger
 };
