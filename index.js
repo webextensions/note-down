@@ -36,11 +36,11 @@ const createNoteDownInstance = function () {
         }
 
         var line = errStr;
+        line = line.replace(/^file:\/\/\//, '/'); // Seemingly, useful for cases like TypeScript
         if (noteDown.getComputedOption('basePath')) {
             // TODO: Check if it works fine with Windows paths
-
-            var filePathAndLine = errStr;
-            var match = errStr.match(/:/g);
+            var filePathAndLine = line;
+            var match = filePathAndLine.match(/:/g);
             var extractedPath = filePathAndLine;
             if (match && match.length >= 2) {
                 extractedPath = extractedPath.substr(0, extractedPath.lastIndexOf(':'));
