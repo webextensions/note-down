@@ -1,3 +1,7 @@
+# Output files for `$ npm pack` command
+note-down-*.tgz
+note-down-*/
+
 # Logs
 logs
 *.log
