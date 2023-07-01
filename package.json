@@ -1,36 +1,36 @@
 {
-  "name": "note-down",
-  "version": "1.0.1",
-  "description": "A logging helper for Node JS Edit",
-  "main": "index.js",
-  "scripts": {
-    "lint": "./node_modules/.bin/eslint --ignore-path .gitignore .",
-    "mocha": "./node_modules/.bin/mocha",
-    "test": "npm run lint && npm run mocha"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/webextensions/note-down.git"
-  },
-  "keywords": [
-    "console",
-    "log",
-    "logging",
-    "library",
-    "file"
-  ],
-  "author": "Priyank Parashar",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/webextensions/note-down/issues"
-  },
-  "homepage": "https://github.com/webextensions/note-down#readme",
-  "dependencies": {
-    "chalk": "=4.1.2"
-  },
-  "devDependencies": {
-    "eslint": "^8.40.0",
-    "mocha": "^10.2.0",
-    "sinon": "^15.1.0"
-  }
+    "name": "note-down",
+    "version": "1.0.1",
+    "description": "A logging helper for Node JS Edit",
+    "main": "index.js",
+    "scripts": {
+        "lint": "./node_modules/.bin/eslint --ignore-path .gitignore .",
+        "mocha": "./node_modules/.bin/mocha",
+        "test": "npm run lint && npm run mocha"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/webextensions/note-down.git"
+    },
+    "keywords": [
+        "console",
+        "log",
+        "logging",
+        "library",
+        "file"
+    ],
+    "author": "Priyank Parashar",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/webextensions/note-down/issues"
+    },
+    "homepage": "https://github.com/webextensions/note-down#readme",
+    "dependencies": {
+        "chalk": "=4.1.2"
+    },
+    "devDependencies": {
+        "eslint": "^8.44.0",
+        "mocha": "^10.2.0",
+        "sinon": "^15.2.0"
+    }
 }
