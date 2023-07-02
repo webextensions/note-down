@@ -2,6 +2,9 @@
     "name": "note-down",
     "version": "1.0.1",
     "description": "A logging helper for Node JS Edit",
+    "engines": {
+        "node": ">=14"
+    },
     "main": "index.js",
     "scripts": {
         "lint": "./node_modules/.bin/eslint --ignore-path .gitignore .",
