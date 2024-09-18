@@ -32,7 +32,7 @@ for (const noteDown of arrNoteDownInstances) {
             var spyConsole = function (initialize, complete) {
                 var spy = sinon.spy(console, 'log');
                 initialize(spy);
-                console.log.restore();
+                spy.restore();
                 complete();
             };
 

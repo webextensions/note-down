@@ -1,8 +1,8 @@
 /*eslint-env node*/
 'use strict';
 
-var util = require('util'),
-    path = require('path');
+var util = require('node:util'),
+    path = require('node:path');
 
 var chalk = require('chalk');
 
@@ -10,36 +10,26 @@ const createNoteDownInstance = function () {
     var noteDown = {};
 
     var getLine = function () {
-        var errStr = '';
-        try {
-            throw new Error('dummy error');
-        } catch (e) {
-            errStr = e.stack.toString();
+        // TODO: * Check if it works fine with Windows paths
 
-            // TODO: This can be optimized. When optimizing, ensure that this works correctly for test cases.
-            errStr = errStr.split('note-down/index.js').pop();
+        let callSites = util.getCallSite();
 
-            const ignoreLogsFor = noteDown.getComputedOption('ignoreLogsFor');
-            if (Array.isArray(ignoreLogsFor)) {
-                for (const entryToIgnore of ignoreLogsFor) {
-                    errStr = errStr.split(entryToIgnore).pop();
+        const ignoreLogsFor = noteDown.getComputedOption('ignoreLogsFor') || [];
+        for (const entryToIgnore of ignoreLogsFor) {
+            callSites = callSites.filter(function (callSite) {
+                if (callSite.scriptName.indexOf(entryToIgnore) >= 0) {
+                    return false;
                 }
-            }
-
-            errStr = errStr.substr(errStr.indexOf('\n    at ') + 1);
-            errStr = errStr.substr(0, errStr.indexOf('\n')).replace('    at ', '');
-
-            if (errStr.indexOf('(') >= 0) {
-                errStr = errStr.substr(errStr.indexOf('(') + 1);
-                errStr = errStr.substr(0, errStr.indexOf(')'));
-            }
+                return true;
+            });
         }
 
-        var line = errStr;
-        line = line.replace(/^file:\/\/\//, '/'); // Seemingly, useful for cases like TypeScript
+        const relevantCallSite = callSites[5];
+
+        let scriptName = relevantCallSite.scriptName;
+        scriptName = scriptName.replace(/^file:\/\/\//, '/'); // Seemingly, useful for cases like TypeScript (was last tested before moving to `util.getCallSite()` API)
         if (noteDown.getComputedOption('basePath')) {
-            // TODO: Check if it works fine with Windows paths
-            var filePathAndLine = line;
+            var filePathAndLine = scriptName;
             var match = filePathAndLine.match(/:/g);
             var extractedPath = filePathAndLine;
             if (match && match.length >= 2) {
@@ -49,8 +39,12 @@ const createNoteDownInstance = function () {
 
             var relativePath = path.relative(noteDown.getComputedOption('basePath'), extractedPath);
 
-            line = relativePath + filePathAndLine.replace(extractedPath, '');
+            scriptName = relativePath + filePathAndLine.replace(extractedPath, '');
         }
+        const lineNumber = relevantCallSite.lineNumber;
+        const column = relevantCallSite.column;
+        const line = scriptName + ':' + lineNumber + ':' + column;
+
         return line;
     };
 
