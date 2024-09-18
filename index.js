@@ -4,7 +4,10 @@
 var util = require('node:util'),
     path = require('node:path');
 
-var chalk = require('chalk');
+// Update the Node.js version requirements when `--experimental-require-module` is not required anymore
+// https://nodejs.org/api/esm.html#require
+// node --experimental-require-module ./node_modules/.bin/mocha
+var chalk = require('chalk').default;
 
 const createNoteDownInstance = function () {
     var noteDown = {};
