@@ -12,7 +12,7 @@ const createNoteDownInstance = function () {
     var getLine = function () {
         // TODO: * Check if it works fine with Windows paths
 
-        let callSites = util.getCallSite();
+        let callSites = util.getCallSites();
 
         const ignoreLogsFor = noteDown.getComputedOption('ignoreLogsFor') || [];
         for (const entryToIgnore of ignoreLogsFor) {
@@ -27,7 +27,7 @@ const createNoteDownInstance = function () {
         const relevantCallSite = callSites[5];
 
         let scriptName = relevantCallSite.scriptName;
-        scriptName = scriptName.replace(/^file:\/\/\//, '/'); // Seemingly, useful for cases like TypeScript (was last tested before moving to `util.getCallSite()` API)
+        scriptName = scriptName.replace(/^file:\/\/\//, '/'); // Seemingly, useful for cases like TypeScript (was last tested before moving to `util.getCallSites()` API)
         if (noteDown.getComputedOption('basePath')) {
             var filePathAndLine = scriptName;
             var match = filePathAndLine.match(/:/g);
