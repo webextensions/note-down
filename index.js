@@ -59,14 +59,23 @@ const createNoteDownInstance = function () {
         }
     }());
 
-    var log = function (msg) {
+    var log = function (msg, logItAs) {
         if (noteDown.getComputedOption('disabled')) {
             // do nothing (because logging is disabled)
         } else {
+            const loggingFn = (() => {
+                if (logItAs === 'error') {
+                    return console.error;
+                } else if (logItAs === 'warning') {
+                    return console.warn;
+                } else {
+                    return console.log;
+                }
+            })();
             if (noteDown.getComputedOption('showLogLine')) {
-                console.log(deviceNameIfAvailableInGray + msg + chalk.gray.dim(' @ ' + getLine()));
+                loggingFn(deviceNameIfAvailableInGray + msg + chalk.gray.dim(' @ ' + getLine()));
             } else {
-                console.log(deviceNameIfAvailableInGray + msg);
+                loggingFn(deviceNameIfAvailableInGray + msg);
             }
         }
     };
@@ -75,12 +84,46 @@ const createNoteDownInstance = function () {
         return param;
     };
 
-    var logIt = function (passedArguments, processFn) {
+    var logIt = function (passedArguments, processFn, logItAs = 'log') {
         var i;
+        let output = [];
         for (i = 0; i < passedArguments.length; i++) {
             var passedArgument = passedArguments[i];
-            log(processFn(passedArgument));
+
+            // TODO: Cover various data types
+            if (
+                typeof passedArgument === 'undefined' ||
+                passedArgument === Infinity ||
+                (typeof passedArgument === 'number' && isNaN(passedArgument))
+            ) {
+                output.push(processFn(String(passedArgument)));
+            } else if (passedArgument instanceof Error) {
+                output.push(processFn(String(passedArgument)));
+                output.push(processFn(passedArgument.stack));
+            } else if (passedArgument instanceof Set) {
+                const setAsArray = Array.from(passedArgument);
+                output.push(processFn('Set(' + setAsArray.length + ') ' + JSON.stringify(setAsArray)));
+            } else if (typeof passedArgument === 'string') {
+                output.push(processFn(passedArgument));
+            } else {
+                output.push(processFn(JSON.stringify(passedArgument)));
+            }
         }
+
+        const result = output.join(' ');
+        log(result, logItAs);
+    };
+
+    var logItAsLog = function (passedArguments, processFn) {
+        logIt(passedArguments, processFn, 'log');
+    };
+
+    var logItAsWarning = function (passedArguments, processFn) {
+        logIt(passedArguments, processFn, 'warning');
+    };
+
+    var logItAsError = function (passedArguments, processFn) {
+        logIt(passedArguments, processFn, 'error');
     };
 
     // debugCategoryList would be used to decide whether to log the .debug(message, category) calls or not
@@ -127,21 +170,21 @@ const createNoteDownInstance = function () {
 
 
     var fnMap = {
-        error:          function () { logIt(arguments, chalk.red); },
-        errorHeading:   function () { logIt(arguments, chalk.white.bgRed); },
-        fatal:          function () { logIt(arguments, chalk.white.bgRed); },
-        fixme:          function () { logIt(arguments, chalk.yellow); },
-        help:           function () { logIt(arguments, chalk.black.bgWhite); },
-        info:           function () { logIt(arguments, chalk.cyan); },
-        log:            function () { logIt(arguments, idempotent); },
-        success:        function () { logIt(arguments, chalk.green); },
-        todo:           function () { logIt(arguments, chalk.yellow); },
-        trace:          function () { logIt(arguments, chalk.yellow); },
-        warn:           function () { logIt(arguments, chalk.yellow); },
-        warnHeading:    function () { logIt(arguments, chalk.black.bgYellow); },
+        error:          function () { logItAsError(arguments, chalk.red); },
+        errorHeading:   function () { logItAsError(arguments, chalk.white.bgRed); },
+        fatal:          function () { logItAsError(arguments, chalk.white.bgRed); },
+        fixme:          function () { logItAsWarning(arguments, chalk.yellow); },
+        help:           function () { logItAsLog(arguments, chalk.black.bgWhite); },
+        info:           function () { logItAsLog(arguments, chalk.cyan); },
+        log:            function () { logItAsLog(arguments, idempotent); },
+        success:        function () { logItAsLog(arguments, chalk.green); },
+        todo:           function () { logItAsWarning(arguments, chalk.yellow); },
+        trace:          function () { logItAsLog(arguments, chalk.yellow); },
+        warn:           function () { logItAsWarning(arguments, chalk.yellow); },
+        warnHeading:    function () { logItAsWarning(arguments, chalk.black.bgYellow); },
 
         data: function () {
-            logIt(arguments, function (msg) {
+            logItAsLog(arguments, function (msg) {
                 return chalk.magenta(util.inspect(msg, {
                     showHidden: false,
                     depth: null,
@@ -158,11 +201,11 @@ const createNoteDownInstance = function () {
                 showMessage = true;
             }
             if (showMessage) {
-                logIt([category + ': ' + msg], chalk.cyan);
+                logItAsLog([category + ': ' + msg], chalk.cyan);
             }
         },
         json: function () {
-            logIt(arguments, function (msg) {
+            logItAsLog(arguments, function (msg) {
                 return chalk.magenta(util.inspect(msg, {
                     showHidden: false,
                     depth: null,
@@ -171,7 +214,7 @@ const createNoteDownInstance = function () {
             });
         },
         verbose: function () {
-            logIt(arguments, function (msg) {
+            logItAsLog(arguments, function (msg) {
                 if (typeof msg !== 'string') {
                     msg = util.inspect(msg, {
                         showHidden: false,
