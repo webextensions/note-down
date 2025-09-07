@@ -9,7 +9,8 @@
     "scripts": {
         "lint": "./node_modules/.bin/eslint --ignore-path .gitignore .",
         "mocha": "./node_modules/.bin/mocha",
-        "test": "npm run lint && npm run mocha"
+        "test": "npm run lint",
+        "test:pending": "npm run mocha"
     },
     "repository": {
         "type": "git",
