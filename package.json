@@ -33,7 +33,7 @@
     },
     "devDependencies": {
         "eslint": "=8.57.0",
-        "mocha": "^10.7.3",
-        "sinon": "^19.0.2"
+        "mocha": "^11.7.2",
+        "sinon": "^21.0.0"
     }
 }
