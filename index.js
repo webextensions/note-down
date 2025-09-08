@@ -24,7 +24,7 @@ const createNoteDownInstance = function () {
             });
         }
 
-        const relevantCallSite = callSites[5];
+        const relevantCallSite = callSites[6];
 
         let scriptName = relevantCallSite.scriptName;
         scriptName = scriptName.replace(/^file:\/\/\//, '/'); // Seemingly, useful for cases like TypeScript (was last tested before moving to `util.getCallSites()` API)
