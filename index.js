@@ -4,7 +4,7 @@
 var util = require('node:util'),
     path = require('node:path');
 
-var chalk = require('chalk');
+var chalk = require('chalk').default;
 
 const createNoteDownInstance = function () {
     var noteDown = {};

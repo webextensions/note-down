@@ -3,7 +3,7 @@
 var assert = require('assert');
 
 var sinon = require('sinon'),
-    chalk = require('chalk');
+    chalk = require('chalk').default;
 
 var {
     noteDown,
