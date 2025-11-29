@@ -1,7 +1,7 @@
 {
     "name": "note-down",
     "version": "2.2.2",
-    "description": "A logging helper for Node JS Edit",
+    "description": "A logging helper for Node.js",
     "engines": {
         "node": ">=22.12.0"
     },
@@ -33,7 +33,7 @@
     },
     "devDependencies": {
         "eslint": "=8.57.0",
-        "mocha": "^11.7.2",
+        "mocha": "^11.7.5",
         "sinon": "^21.0.0"
     }
 }
