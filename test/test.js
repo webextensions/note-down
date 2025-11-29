@@ -8,7 +8,7 @@ var sinon = require('sinon'),
 var {
     noteDown,
     createNoteDownInstance
-} = require('../index.js');      // eslint-disable-line no-unused-vars
+} = require('../index.js');
 
 const arrNoteDownInstances = [
     noteDown,
@@ -107,7 +107,7 @@ for (const noteDown of arrNoteDownInstances) {
                         // Using ".deepEqual()" to print the complete error message
                         // It seems to be not match correctly when executed using "np" (https://www.npmjs.com/package/np)
                         assert.deepEqual({value: spy.args[0][0]}, {value: str + '\u001b[90m\u001b[2m @ test.js:104:28\u001b[22m\u001b[39m'});
-                    } catch (e) {
+                    } catch (err) { // eslint-disable-line no-unused-vars
                         console.log(chalk.red('You should never see this message on screen under normal run (It is OK, if you see this message when running through a tool like npm global package "np").'));
                         assert.deepEqual({value: spy.args[0][0]}, {value: str + ' @ test.js:104:28'});
                     }
@@ -130,7 +130,7 @@ for (const noteDown of arrNoteDownInstances) {
                         // Using ".deepEqual()" to print the complete error message
                         // It seems to be not match correctly when executed using "np" (https://www.npmjs.com/package/np)
                         assert.deepEqual({value: spy.args[0][0]}, {value: str + '\u001b[90m\u001b[2m @ ' + __filename + ':127:28\u001b[22m\u001b[39m'});
-                    } catch (e) {
+                    } catch (err) { // eslint-disable-line no-unused-vars
                         console.log(chalk.red('You should never see this message on screen under normal run (It is OK, if you see this message when running through a tool like npm global package "np").'));
                         assert.deepEqual({value: spy.args[0][0]}, {value: str + ' @ ' + __filename + ':127:28'});
                     }
