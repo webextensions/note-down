@@ -1,6 +1,6 @@
 {
     "name": "note-down",
-    "version": "2.3.0",
+    "version": "2.4.0",
     "description": "A logging helper for Node.js",
     "engines": {
         "node": ">=22.12.0"
