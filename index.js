@@ -1,10 +1,7 @@
-/*eslint-env node*/
-'use strict';
+import util from 'node:util';
+import path from 'node:path';
 
-var util = require('node:util'),
-    path = require('node:path');
-
-var chalk = require('chalk').default;
+import chalk from 'chalk';
 
 const createNoteDownInstance = function () {
     var noteDown = {};
@@ -282,7 +279,7 @@ const createNoteDownInstance = function () {
 const noteDown = createNoteDownInstance();
 const logger = noteDown;
 
-module.exports = {
+export {
     createNoteDownInstance,
     noteDown,
     logger
